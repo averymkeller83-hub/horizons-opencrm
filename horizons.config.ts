@@ -17,10 +17,10 @@ const config: HorizonsConfig = {
   },
   modules: {
     pipeline: true,
-    jobs: false,
-    orders: false,
-    subscriptions: false,
-    supportTickets: false,
+    jobs: true,
+    orders: true,
+    subscriptions: true,
+    supportTickets: true,
   },
   integrations: {},
   storage: {

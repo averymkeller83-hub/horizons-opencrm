@@ -2,10 +2,17 @@ import config from "@/horizons.config";
 import type { ModuleManifest } from "./types";
 
 import { pipelineModule } from "@/modules/pipeline/module";
+import { jobsModule } from "@/modules/jobs/module";
+import { ordersModule } from "@/modules/orders/module";
+import { subscriptionsModule } from "@/modules/subscriptions/module";
+import { supportTicketsModule } from "@/modules/support-tickets/module";
 
 const allModules: Record<string, ModuleManifest> = {
   pipeline: pipelineModule,
-  // jobs, orders, subscriptions, supportTickets land in Phase 1c
+  jobs: jobsModule,
+  orders: ordersModule,
+  subscriptions: subscriptionsModule,
+  supportTickets: supportTicketsModule,
 };
 
 export function getEnabledModules(): ModuleManifest[] {
