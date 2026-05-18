@@ -15,6 +15,13 @@
       "when": 1779106196784,
       "tag": "0001_cute_expediter",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1779111237441,
+      "tag": "0002_bright_gunslinger",
+      "breakpoints": true
     }
   ]
 }
