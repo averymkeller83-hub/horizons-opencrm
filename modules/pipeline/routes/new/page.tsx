@@ -7,20 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { createDeal } from "../../actions";
-
-async function getContactsAndStagesAction() {
-  "use server";
-  const { db } = await import("@/lib/db");
-  const { contacts } = await import("@/lib/db/schema");
-  const { pipelineStages } = await import("../../schema");
-  const { requireOrg } = await import("@/lib/clerk");
-  const orgId = await requireOrg();
-  const { eq } = await import("drizzle-orm");
-  return {
-    contacts: db.select().from(contacts).where(eq(contacts.organizationId, orgId)).all(),
-    stages: db.select().from(pipelineStages).where(eq(pipelineStages.organizationId, orgId)).all(),
-  };
-}
+import { getContactsAndStages } from "../../loaders";
 
 export default function NewDealPage() {
   const router = useRouter();
@@ -28,7 +15,7 @@ export default function NewDealPage() {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    getContactsAndStagesAction().then(setOpts);
+    getContactsAndStages().then(setOpts);
   }, []);
 
   if (!opts) return <p>Loading...</p>;
