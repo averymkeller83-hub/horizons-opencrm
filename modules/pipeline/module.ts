@@ -1,5 +1,6 @@
 import type { ModuleManifest } from "@/lib/modules/types";
 import * as schema from "./schema";
+import { PipelineDashboardWidget } from "./dashboard-widget";
 
 export const pipelineModule: ModuleManifest = {
   name: "pipeline",
@@ -9,4 +10,5 @@ export const pipelineModule: ModuleManifest = {
     { path: "/pipeline", label: "Pipeline" },
   ],
   schema,
+  dashboardWidget: PipelineDashboardWidget,
 };
