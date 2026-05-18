@@ -16,7 +16,7 @@ const config: HorizonsConfig = {
     timezone: "America/Indianapolis",
   },
   modules: {
-    pipeline: false,
+    pipeline: true,
     jobs: false,
     orders: false,
     subscriptions: false,
