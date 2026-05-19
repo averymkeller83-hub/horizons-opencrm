@@ -19,6 +19,9 @@ data/*.db-shm
 # OS
 .DS_Store
 
+# TS incremental build cache
+tsconfig.tsbuildinfo
+
 # logs
 *.log
 npm-debug.log*
