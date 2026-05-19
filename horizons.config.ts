@@ -21,6 +21,7 @@ const config: HorizonsConfig = {
     orders: true,
     subscriptions: true,
     supportTickets: true,
+    campaigns: true,
   },
   integrations: {},
   storage: {

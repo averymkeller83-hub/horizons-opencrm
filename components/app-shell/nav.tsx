@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LayoutDashboard, Users, Trello, Briefcase, ShoppingCart, Repeat, LifeBuoy } from "lucide-react";
+import { LayoutDashboard, Users, Trello, Briefcase, ShoppingCart, Repeat, LifeBuoy, Megaphone } from "lucide-react";
 import { getEnabledModules } from "@/lib/modules";
 
 // Map module navIcon strings → lucide components. Add new icons here
@@ -10,6 +10,7 @@ const iconMap: Record<string, React.ComponentType<{ size?: number }>> = {
   ShoppingCart,
   Repeat,
   LifeBuoy,
+  Megaphone,
 };
 
 export function Nav() {

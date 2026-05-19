@@ -6,6 +6,7 @@ import { jobsModule } from "@/modules/jobs/module";
 import { ordersModule } from "@/modules/orders/module";
 import { subscriptionsModule } from "@/modules/subscriptions/module";
 import { supportTicketsModule } from "@/modules/support-tickets/module";
+import { campaignsModule } from "@/modules/campaigns/module";
 
 const allModules: Record<string, ModuleManifest> = {
   pipeline: pipelineModule,
@@ -13,6 +14,7 @@ const allModules: Record<string, ModuleManifest> = {
   orders: ordersModule,
   subscriptions: subscriptionsModule,
   supportTickets: supportTicketsModule,
+  campaigns: campaignsModule,
 };
 
 export function getEnabledModules(): ModuleManifest[] {
