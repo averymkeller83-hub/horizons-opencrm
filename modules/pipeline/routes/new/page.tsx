@@ -11,7 +11,7 @@ import { getContactsAndStages } from "../../loaders";
 
 export default function NewDealPage() {
   const router = useRouter();
-  const [opts, setOpts] = useState<{ contacts: any[]; stages: any[] } | null>(null);
+  const [opts, setOpts] = useState<{ contacts: any[]; stages: any[]; campaigns: any[] } | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const submittingRef = useRef(false);
 
@@ -32,6 +32,7 @@ export default function NewDealPage() {
         title: formData.get("title") as string,
         valueCents: Math.round(parseFloat(formData.get("value") as string || "0") * 100),
         notes: (formData.get("notes") as string) || undefined,
+        campaignId: (formData.get("campaignId") as string) || undefined,
       });
       router.push(`/pipeline/${deal.id}`);
     } finally {
@@ -69,6 +70,13 @@ export default function NewDealPage() {
         <div>
           <Label htmlFor="value">Value (USD)</Label>
           <Input id="value" name="value" type="number" step="0.01" />
+        </div>
+        <div>
+          <Label htmlFor="campaignId">Campaign (optional)</Label>
+          <select id="campaignId" name="campaignId" className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm">
+            <option value="">— none —</option>
+            {opts.campaigns.map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
+          </select>
         </div>
         <div>
           <Label htmlFor="notes">Notes</Label>

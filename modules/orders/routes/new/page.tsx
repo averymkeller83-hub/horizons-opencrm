@@ -12,13 +12,13 @@ type LineItemDraft = { productName: string; quantity: number; unitPriceCents: nu
 
 export default function NewOrderPage() {
   const router = useRouter();
-  const [contacts, setContacts] = useState<any[] | null>(null);
+  const [opts, setOpts] = useState<{ contacts: any[]; campaigns: any[] } | null>(null);
   const [items, setItems] = useState<LineItemDraft[]>([{ productName: "", quantity: 1, unitPriceCents: 0 }]);
   const [submitting, setSubmitting] = useState(false);
   const submittingRef = useRef(false);
 
-  useEffect(() => { getContactsForOrder().then(setContacts); }, []);
-  if (!contacts) return <p>Loading...</p>;
+  useEffect(() => { getContactsForOrder().then(setOpts); }, []);
+  if (!opts) return <p>Loading...</p>;
 
   function addItem() { setItems((cur) => [...cur, { productName: "", quantity: 1, unitPriceCents: 0 }]); }
   function removeItem(i: number) { setItems((cur) => cur.filter((_, idx) => idx !== i)); }
@@ -36,6 +36,7 @@ export default function NewOrderPage() {
       const o = await createOrder({
         contactId: formData.get("contactId") as string,
         notes: (formData.get("notes") as string) || undefined,
+        campaignId: (formData.get("campaignId") as string) || undefined,
         items: items.filter((it) => it.productName.trim().length > 0),
       });
       router.push(`/orders/${o.id}`);
@@ -50,7 +51,7 @@ export default function NewOrderPage() {
           <Label htmlFor="contactId">Customer *</Label>
           <select id="contactId" name="contactId" required className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm">
             <option value="">— select —</option>
-            {contacts.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+            {opts.contacts.map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
 
@@ -81,6 +82,13 @@ export default function NewOrderPage() {
           Total: <strong>${(total / 100).toFixed(2)}</strong>
         </div>
 
+        <div>
+          <Label htmlFor="campaignId">Campaign (optional)</Label>
+          <select id="campaignId" name="campaignId" className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm">
+            <option value="">— none —</option>
+            {opts.campaigns.map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
+          </select>
+        </div>
         <div><Label htmlFor="notes">Notes</Label><Textarea id="notes" name="notes" /></div>
         <Button type="submit" disabled={submitting}>{submitting ? "Creating..." : "Create order"}</Button>
       </form>

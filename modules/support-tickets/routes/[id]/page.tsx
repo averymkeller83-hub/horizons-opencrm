@@ -4,6 +4,7 @@ import { eq, and } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { contacts } from "@/lib/db/schema";
 import { supportTickets } from "../../schema";
+import { campaigns } from "@/modules/campaigns/schema";
 import { requireOrg } from "@/lib/clerk";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -42,6 +43,19 @@ export default async function TicketDetailPage({ params }: { params: Promise<{ i
         <CardHeader><h2 className="font-semibold">Contact</h2></CardHeader>
         <CardContent>{c ? <Link className="text-primary hover:underline" href={`/contacts/${c.id}`}>{c.name}</Link> : "—"}</CardContent>
       </Card>
+      {t.campaignId && (() => {
+        const camp = db.select().from(campaigns).where(eq(campaigns.id, t.campaignId)).get();
+        return camp ? (
+          <Card>
+            <CardHeader><h2 className="font-semibold">Campaign</h2></CardHeader>
+            <CardContent>
+              <Link className="text-primary hover:underline" href={`/campaigns/${camp.id}`}>
+                {camp.name}
+              </Link>
+            </CardContent>
+          </Card>
+        ) : null;
+      })()}
       {t.slaDueAt && (
         <Card>
           <CardHeader><h2 className="font-semibold">SLA due</h2></CardHeader>

@@ -10,11 +10,11 @@ import { getContactsForSubscription } from "../../loaders";
 
 export default function NewSubscriptionPage() {
   const router = useRouter();
-  const [contacts, setContacts] = useState<any[] | null>(null);
+  const [opts, setOpts] = useState<{ contacts: any[]; campaigns: any[] } | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const submittingRef = useRef(false);
-  useEffect(() => { getContactsForSubscription().then(setContacts); }, []);
-  if (!contacts) return <p>Loading...</p>;
+  useEffect(() => { getContactsForSubscription().then(setOpts); }, []);
+  if (!opts) return <p>Loading...</p>;
   async function onSubmit(formData: FormData) {
     if (submittingRef.current) return;
     submittingRef.current = true;
@@ -26,6 +26,7 @@ export default function NewSubscriptionPage() {
         status: (formData.get("status") as any) || "active",
         monthlyValueCents: Math.round(parseFloat(formData.get("monthlyValue") as string || "0") * 100),
         notes: (formData.get("notes") as string) || undefined,
+        campaignId: (formData.get("campaignId") as string) || undefined,
       });
       router.push(`/subscriptions/${s.id}`);
     } finally { submittingRef.current = false; setSubmitting(false); }
@@ -39,7 +40,7 @@ export default function NewSubscriptionPage() {
           <Label htmlFor="contactId">Contact *</Label>
           <select id="contactId" name="contactId" required className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm">
             <option value="">— select —</option>
-            {contacts.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+            {opts.contacts.map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
         <div>
@@ -52,6 +53,13 @@ export default function NewSubscriptionPage() {
           </select>
         </div>
         <div><Label htmlFor="monthlyValue">Monthly value (USD)</Label><Input id="monthlyValue" name="monthlyValue" type="number" step="0.01" /></div>
+        <div>
+          <Label htmlFor="campaignId">Campaign (optional)</Label>
+          <select id="campaignId" name="campaignId" className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm">
+            <option value="">— none —</option>
+            {opts.campaigns.map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
+          </select>
+        </div>
         <div><Label htmlFor="notes">Notes</Label><Textarea id="notes" name="notes" /></div>
         <Button type="submit" disabled={submitting}>{submitting ? "Creating..." : "Create subscription"}</Button>
       </form>

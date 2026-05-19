@@ -12,6 +12,7 @@ const createSchema = z.object({
   scheduledAt: z.date().optional(),
   priceCents: z.number().int().nonnegative().default(0),
   notes: z.string().optional(),
+  campaignId: z.string().optional(),
 });
 
 const updateSchema = createSchema.partial().omit({ contactId: true });
@@ -27,6 +28,7 @@ export async function createJob(input: z.infer<typeof createSchema>) {
     scheduledAt: parsed.scheduledAt ?? null,
     priceCents: parsed.priceCents,
     notes: parsed.notes ?? null,
+    campaignId: parsed.campaignId ?? null,
   }).returning().all();
   return row;
 }

@@ -16,6 +16,7 @@ const createSchema = z.object({
   status: z.enum(["placed", "paid", "fulfilling", "shipped", "delivered", "refunded"]).default("placed"),
   notes: z.string().optional(),
   items: z.array(itemSchema).default([]),
+  campaignId: z.string().optional(),
 });
 
 function computeTotal(items: { quantity: number; unitPriceCents: number }[]): number {
@@ -32,6 +33,7 @@ export async function createOrder(input: z.infer<typeof createSchema>) {
     status: parsed.status,
     totalCents: total,
     notes: parsed.notes ?? null,
+    campaignId: parsed.campaignId ?? null,
   }).returning().all();
   if (parsed.items.length > 0) {
     db.insert(orderItems).values(parsed.items.map((it) => ({

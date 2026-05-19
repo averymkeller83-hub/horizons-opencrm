@@ -11,6 +11,7 @@ const createSchema = z.object({
   body: z.string().min(1),
   priority: z.enum(["low", "medium", "high", "urgent"]).default("medium"),
   slaDueAt: z.date().optional(),
+  campaignId: z.string().optional(),
 });
 
 const updateSchema = createSchema.partial().omit({ contactId: true });
@@ -25,6 +26,7 @@ export async function createTicket(input: z.infer<typeof createSchema>) {
     body: parsed.body,
     priority: parsed.priority,
     slaDueAt: parsed.slaDueAt ?? null,
+    campaignId: parsed.campaignId ?? null,
   }).returning().all();
   return row;
 }

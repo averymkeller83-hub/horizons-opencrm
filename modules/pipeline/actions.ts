@@ -21,6 +21,7 @@ const createDealSchema = z.object({
   probability: z.number().int().min(0).max(100).optional(),
   expectedCloseAt: z.date().optional(),
   notes: z.string().optional(),
+  campaignId: z.string().optional(),
 });
 
 const updateDealSchema = createDealSchema.partial().omit({ contactId: true, stageId: true });
@@ -50,6 +51,7 @@ export async function createDeal(input: z.infer<typeof createDealSchema>) {
     probability: parsed.probability ?? 50,
     expectedCloseAt: parsed.expectedCloseAt ?? null,
     notes: parsed.notes ?? null,
+    campaignId: parsed.campaignId ?? null,
   }).returning().all();
   return row;
 }

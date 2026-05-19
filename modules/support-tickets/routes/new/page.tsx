@@ -10,11 +10,11 @@ import { getContactsForTicket } from "../../loaders";
 
 export default function NewTicketPage() {
   const router = useRouter();
-  const [contacts, setContacts] = useState<any[] | null>(null);
+  const [opts, setOpts] = useState<{ contacts: any[]; campaigns: any[] } | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const submittingRef = useRef(false);
-  useEffect(() => { getContactsForTicket().then(setContacts); }, []);
-  if (!contacts) return <p>Loading...</p>;
+  useEffect(() => { getContactsForTicket().then(setOpts); }, []);
+  if (!opts) return <p>Loading...</p>;
   async function onSubmit(formData: FormData) {
     if (submittingRef.current) return;
     submittingRef.current = true;
@@ -25,6 +25,7 @@ export default function NewTicketPage() {
         subject: formData.get("subject") as string,
         body: formData.get("body") as string,
         priority: (formData.get("priority") as any) || "medium",
+        campaignId: (formData.get("campaignId") as string) || undefined,
       });
       router.push(`/support-tickets/${t.id}`);
     } finally { submittingRef.current = false; setSubmitting(false); }
@@ -38,7 +39,7 @@ export default function NewTicketPage() {
           <Label htmlFor="contactId">Contact *</Label>
           <select id="contactId" name="contactId" required className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm">
             <option value="">— select —</option>
-            {contacts.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+            {opts.contacts.map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
         <div>
@@ -48,6 +49,13 @@ export default function NewTicketPage() {
             <option value="medium">Medium</option>
             <option value="high">High</option>
             <option value="urgent">Urgent</option>
+          </select>
+        </div>
+        <div>
+          <Label htmlFor="campaignId">Campaign (optional)</Label>
+          <select id="campaignId" name="campaignId" className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm">
+            <option value="">— none —</option>
+            {opts.campaigns.map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
         <div><Label htmlFor="body">Description *</Label><Textarea id="body" name="body" placeholder="Detailed description of the issue..." required /></div>

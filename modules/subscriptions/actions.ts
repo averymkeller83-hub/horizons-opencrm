@@ -12,6 +12,7 @@ const createSchema = z.object({
   monthlyValueCents: z.number().int().nonnegative().default(0),
   currentPeriodEnd: z.date().optional(),
   notes: z.string().optional(),
+  campaignId: z.string().optional(),
 });
 
 const updateSchema = createSchema.partial().omit({ contactId: true });
@@ -27,6 +28,7 @@ export async function createSubscription(input: z.infer<typeof createSchema>) {
     monthlyValueCents: parsed.monthlyValueCents,
     currentPeriodEnd: parsed.currentPeriodEnd ?? null,
     notes: parsed.notes ?? null,
+    campaignId: parsed.campaignId ?? null,
   }).returning().all();
   return row;
 }

@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { contacts } from "@/lib/db/schema";
 import { getOrderWithItems } from "../../queries";
+import { campaigns } from "@/modules/campaigns/schema";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -55,6 +56,19 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
           )}
         </CardContent>
       </Card>
+      {order.campaignId && (() => {
+        const camp = db.select().from(campaigns).where(eq(campaigns.id, order.campaignId)).get();
+        return camp ? (
+          <Card>
+            <CardHeader><h2 className="font-semibold">Campaign</h2></CardHeader>
+            <CardContent>
+              <Link className="text-primary hover:underline" href={`/campaigns/${camp.id}`}>
+                {camp.name}
+              </Link>
+            </CardContent>
+          </Card>
+        ) : null;
+      })()}
       {order.notes && (
         <Card>
           <CardHeader><h2 className="font-semibold">Notes</h2></CardHeader>

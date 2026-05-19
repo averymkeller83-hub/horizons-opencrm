@@ -4,6 +4,7 @@ import { eq, and } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { contacts } from "@/lib/db/schema";
 import { jobs } from "../../schema";
+import { campaigns } from "@/modules/campaigns/schema";
 import { requireOrg } from "@/lib/clerk";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -30,6 +31,19 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
         <CardHeader><h2 className="font-semibold">Contact</h2></CardHeader>
         <CardContent>{c ? <Link className="text-primary hover:underline" href={`/contacts/${c.id}`}>{c.name}</Link> : "—"}</CardContent>
       </Card>
+      {j.campaignId && (() => {
+        const camp = db.select().from(campaigns).where(eq(campaigns.id, j.campaignId)).get();
+        return camp ? (
+          <Card>
+            <CardHeader><h2 className="font-semibold">Campaign</h2></CardHeader>
+            <CardContent>
+              <Link className="text-primary hover:underline" href={`/campaigns/${camp.id}`}>
+                {camp.name}
+              </Link>
+            </CardContent>
+          </Card>
+        ) : null;
+      })()}
       {j.notes && (
         <Card>
           <CardHeader><h2 className="font-semibold">Notes</h2></CardHeader>
