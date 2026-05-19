@@ -1,6 +1,7 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import { nanoid } from "nanoid";
 import { contacts } from "@/lib/db/schema/contacts";
+import { campaigns } from "@/modules/campaigns/schema";
 
 export const pipelineStages = sqliteTable("pipeline_stages", {
   id: text("id").primaryKey().$defaultFn(() => nanoid()),
@@ -17,6 +18,7 @@ export const deals = sqliteTable("deals", {
   organizationId: text("organization_id").notNull(),
   contactId: text("contact_id").notNull().references(() => contacts.id, { onDelete: "cascade" }),
   stageId: text("stage_id").notNull().references(() => pipelineStages.id, { onDelete: "restrict" }),
+  campaignId: text("campaign_id").references(() => campaigns.id, { onDelete: "set null" }),
   title: text("title").notNull(),
   valueCents: integer("value_cents").notNull().default(0),
   probability: integer("probability").default(50),

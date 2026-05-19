@@ -43,6 +43,13 @@
       "when": 1779112658041,
       "tag": "0005_petite_greymalkin",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1779197805446,
+      "tag": "0006_blushing_master_chief",
+      "breakpoints": true
     }
   ]
 }

@@ -1,11 +1,13 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import { nanoid } from "nanoid";
 import { contacts } from "@/lib/db/schema/contacts";
+import { campaigns } from "@/modules/campaigns/schema";
 
 export const supportTickets = sqliteTable("support_tickets", {
   id: text("id").primaryKey().$defaultFn(() => nanoid()),
   organizationId: text("organization_id").notNull(),
   contactId: text("contact_id").notNull().references(() => contacts.id, { onDelete: "cascade" }),
+  campaignId: text("campaign_id").references(() => campaigns.id, { onDelete: "set null" }),
   subject: text("subject").notNull(),
   body: text("body").notNull(),
   status: text("status", { enum: ["new", "in_progress", "waiting_on_customer", "resolved", "closed"] }).notNull().default("new"),
