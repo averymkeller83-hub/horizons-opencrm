@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,7 @@ export default function NewOrderPage() {
   const [contacts, setContacts] = useState<any[] | null>(null);
   const [items, setItems] = useState<LineItemDraft[]>([{ productName: "", quantity: 1, unitPriceCents: 0 }]);
   const [submitting, setSubmitting] = useState(false);
+  const submittingRef = useRef(false);
 
   useEffect(() => { getContactsForOrder().then(setContacts); }, []);
   if (!contacts) return <p>Loading...</p>;
@@ -28,6 +29,8 @@ export default function NewOrderPage() {
   const total = items.reduce((acc, it) => acc + it.quantity * it.unitPriceCents, 0);
 
   async function onSubmit(formData: FormData) {
+    if (submittingRef.current) return;
+    submittingRef.current = true;
     setSubmitting(true);
     try {
       const o = await createOrder({
@@ -36,7 +39,7 @@ export default function NewOrderPage() {
         items: items.filter((it) => it.productName.trim().length > 0),
       });
       router.push(`/orders/${o.id}`);
-    } finally { setSubmitting(false); }
+    } finally { submittingRef.current = false; setSubmitting(false); }
   }
 
   return (

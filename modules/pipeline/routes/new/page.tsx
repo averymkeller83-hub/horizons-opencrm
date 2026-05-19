@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,6 +13,7 @@ export default function NewDealPage() {
   const router = useRouter();
   const [opts, setOpts] = useState<{ contacts: any[]; stages: any[] } | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const submittingRef = useRef(false);
 
   useEffect(() => {
     getContactsAndStages().then(setOpts);
@@ -21,6 +22,8 @@ export default function NewDealPage() {
   if (!opts) return <p>Loading...</p>;
 
   async function onSubmit(formData: FormData) {
+    if (submittingRef.current) return;
+    submittingRef.current = true;
     setSubmitting(true);
     try {
       const deal = await createDeal({
@@ -32,6 +35,7 @@ export default function NewDealPage() {
       });
       router.push(`/pipeline/${deal.id}`);
     } finally {
+      submittingRef.current = false;
       setSubmitting(false);
     }
   }

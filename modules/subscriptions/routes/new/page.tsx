@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,9 +12,12 @@ export default function NewSubscriptionPage() {
   const router = useRouter();
   const [contacts, setContacts] = useState<any[] | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const submittingRef = useRef(false);
   useEffect(() => { getContactsForSubscription().then(setContacts); }, []);
   if (!contacts) return <p>Loading...</p>;
   async function onSubmit(formData: FormData) {
+    if (submittingRef.current) return;
+    submittingRef.current = true;
     setSubmitting(true);
     try {
       const s = await createSubscription({
@@ -25,7 +28,7 @@ export default function NewSubscriptionPage() {
         notes: (formData.get("notes") as string) || undefined,
       });
       router.push(`/subscriptions/${s.id}`);
-    } finally { setSubmitting(false); }
+    } finally { submittingRef.current = false; setSubmitting(false); }
   }
   return (
     <div className="max-w-xl space-y-6">
