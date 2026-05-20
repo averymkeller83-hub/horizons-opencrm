@@ -24,7 +24,7 @@ export function CreateStageForm({ nextOrder = 0, variant = "empty-state" }: Prop
     if (!raw) return;
     setSubmitting(true);
     try {
-      await createStage({ name: raw, order: nextOrder });
+      await createStage({ name: raw, order: nextOrder, isWon: false, isLost: false });
       setName("");
       router.refresh();
     } finally {

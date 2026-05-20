@@ -35,6 +35,7 @@ export default function NewOrderPage() {
     try {
       const o = await createOrder({
         contactId: formData.get("contactId") as string,
+        status: "placed",
         notes: (formData.get("notes") as string) || undefined,
         campaignId: (formData.get("campaignId") as string) || undefined,
         items: items.filter((it) => it.productName.trim().length > 0),
