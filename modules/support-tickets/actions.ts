@@ -16,7 +16,7 @@ const createSchema = z.object({
 
 const updateSchema = createSchema.partial().omit({ contactId: true });
 
-export async function createTicket(input: z.infer<typeof createSchema>) {
+export async function createTicket(input: z.input<typeof createSchema>) {
   const orgId = await requireOrg();
   const parsed = createSchema.parse(input);
   const [row] = db.insert(supportTickets).values({

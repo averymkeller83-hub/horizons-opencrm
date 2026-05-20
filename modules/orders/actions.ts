@@ -23,7 +23,7 @@ function computeTotal(items: { quantity: number; unitPriceCents: number }[]): nu
   return items.reduce((acc, i) => acc + i.quantity * i.unitPriceCents, 0);
 }
 
-export async function createOrder(input: z.infer<typeof createSchema>) {
+export async function createOrder(input: z.input<typeof createSchema>) {
   const orgId = await requireOrg();
   const parsed = createSchema.parse(input);
   const total = computeTotal(parsed.items);
@@ -61,7 +61,7 @@ async function recomputeOrderTotal(orderId: string): Promise<void> {
   db.update(orders).set({ totalCents: total }).where(eq(orders.id, orderId)).run();
 }
 
-export async function addLineItem(orderId: string, input: z.infer<typeof itemSchema>) {
+export async function addLineItem(orderId: string, input: z.input<typeof itemSchema>) {
   await requireOrg();
   const parsed = itemSchema.parse(input);
   const [row] = db.insert(orderItems).values({

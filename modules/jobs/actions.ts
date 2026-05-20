@@ -17,7 +17,7 @@ const createSchema = z.object({
 
 const updateSchema = createSchema.partial().omit({ contactId: true });
 
-export async function createJob(input: z.infer<typeof createSchema>) {
+export async function createJob(input: z.input<typeof createSchema>) {
   const orgId = await requireOrg();
   const parsed = createSchema.parse(input);
   const [row] = db.insert(jobs).values({
@@ -33,7 +33,7 @@ export async function createJob(input: z.infer<typeof createSchema>) {
   return row;
 }
 
-export async function updateJob(id: string, input: z.infer<typeof updateSchema>) {
+export async function updateJob(id: string, input: z.input<typeof updateSchema>) {
   const orgId = await requireOrg();
   const parsed = updateSchema.parse(input);
   const [row] = db.update(jobs).set({ ...parsed, updatedAt: new Date() })

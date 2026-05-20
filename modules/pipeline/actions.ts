@@ -26,7 +26,7 @@ const createDealSchema = z.object({
 
 const updateDealSchema = createDealSchema.partial().omit({ contactId: true, stageId: true });
 
-export async function createStage(input: z.infer<typeof createStageSchema>) {
+export async function createStage(input: z.input<typeof createStageSchema>) {
   const orgId = await requireOrg();
   const parsed = createStageSchema.parse(input);
   const [row] = db.insert(pipelineStages).values({
@@ -39,7 +39,7 @@ export async function createStage(input: z.infer<typeof createStageSchema>) {
   return row;
 }
 
-export async function createDeal(input: z.infer<typeof createDealSchema>) {
+export async function createDeal(input: z.input<typeof createDealSchema>) {
   const orgId = await requireOrg();
   const parsed = createDealSchema.parse(input);
   const [row] = db.insert(deals).values({
@@ -67,7 +67,7 @@ export async function moveDealStage(dealId: string, newStageId: string) {
   return row;
 }
 
-export async function updateDeal(id: string, input: z.infer<typeof updateDealSchema>) {
+export async function updateDeal(id: string, input: z.input<typeof updateDealSchema>) {
   const orgId = await requireOrg();
   const parsed = updateDealSchema.parse(input);
   const [row] = db

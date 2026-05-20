@@ -22,7 +22,7 @@ const createSchema = z.object({
 
 const updateSchema = createSchema.partial();
 
-export async function createCampaign(input: z.infer<typeof createSchema>) {
+export async function createCampaign(input: z.input<typeof createSchema>) {
   const orgId = await requireOrg();
   const parsed = createSchema.parse(input);
   const [row] = db
@@ -44,7 +44,7 @@ export async function createCampaign(input: z.infer<typeof createSchema>) {
 
 export async function updateCampaign(
   id: string,
-  input: z.infer<typeof updateSchema>,
+  input: z.input<typeof updateSchema>,
 ) {
   const orgId = await requireOrg();
   const parsed = updateSchema.parse(input);
